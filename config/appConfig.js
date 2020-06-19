@@ -1,7 +1,7 @@
 let appConfig={};
 appConfig.PORT=3001;
 appConfig.environment="dev";
-appConfig.apiVersion="1.0.0";
+appConfig.apiVersion="/api/v1";
 appConfig.allowedCorsOrigin="*";
 appConfig.db={
     url:'mongodb://localhost:27017/blogApp'

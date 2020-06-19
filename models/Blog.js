@@ -19,6 +19,7 @@ let blogSchema = new schema({
   },
   views: {
     type: Number,
+    default: 0
   },
   isPublised: {
     type: Boolean,
@@ -28,16 +29,17 @@ let blogSchema = new schema({
   },
   author: {
     type: String,
+    required: true
   },
-  tags: [],
+ tags:[],
   created: {
     type: Date,
     default: Date.now,
   },
-  created: {
+  lastModified: {
     type: Date,
     default: Date.now,
   },
 });
 
-mongoose.model('Blogs', blogSchema)
+module.exports=mongoose.model('Blogs', blogSchema)

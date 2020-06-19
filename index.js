@@ -3,9 +3,20 @@ const config=require('./config/appConfig')
 const fs=require('fs');
 const appConfig = require('./config/appConfig');
 const mongoose = require('mongoose');
-let app= express();
+const bodyparser = require('body-parser');
+require('./models/Blog');
+let app = express();
+app.use(bodyparser.json())
+const modelPath = './models';
+fs.readdirSync(modelPath).forEach(function(file){
 
-const routePath='./routes';
+    if (~file.indexOf('.js')) {
+        console.log(modelPath + '/' + file);
+         require(modelPath+'/'+file);
+    }
+})
+const routePath = './routes';
+
 fs.readdirSync(routePath).forEach(function(file){
 
     if(~file.indexOf('.js')){
@@ -13,13 +24,7 @@ fs.readdirSync(routePath).forEach(function(file){
         routes.readRoute(app)
     }
 })
-const modelPath = './models';
-fs.readdirSync(modelPath).forEach(function(file){
 
-    if(~file.indexOf('.js')){
-         require(modelPath+'/'+file);
-    }
-})
 
 app.listen(appConfig.PORT, (req,res)=>{
     console.log('App is running')
