@@ -3,7 +3,7 @@ const shortid = require('shortid')
 
 const blogModel = mongoose.model('Blogs');
 const responseFormat = require('../Libs/responseLib');
-
+const currentTime = require('../Libs/timeLib')
 const helloFunction = (req, res) => {
     res.send('Hello world')
 
@@ -37,7 +37,7 @@ const createBlog = (req, res) => {
            console.log(apiResponse)
             res.send(apiResponse)
         }
-        else if (result == undefined || result == null || result == '') {
+        else if (responseFormat.checkRespone(result)) {
             let apiResponse=     responseFormat.generate(null, "No blog found",404 , result)
             res.send(apiResponse);
         }
@@ -57,7 +57,7 @@ let getAllBlogs = (req, res) => {
            console.log(apiResponse)
             res.send(apiResponse)
         }
-        else if (result == undefined || result == null || result == '') {
+        else if (responseFormat.checkRespone(result)) {
             let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
             res.send(apiResponse);
         }
@@ -75,7 +75,7 @@ let getBlogById = (req, res) => {
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
@@ -93,7 +93,7 @@ let getBlogByAuthor = (req, res) => {
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
@@ -111,7 +111,7 @@ let getBlogByCategory = (req, res) => {
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
@@ -129,7 +129,7 @@ let deleteBlog = (req, res) => {
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
@@ -142,19 +142,41 @@ let deleteBlog = (req, res) => {
 
 }
 let increaseViewCount = (req, res) => { 
-    blogModel.findById({_id:req.params.blogId}).exec((error, result) => {
+    console.log(req.params.blogId)
+    blogModel.findById({ _id: req.params.blogId }).exec((error, result) => {
+        console.log(result)
         if (error) {
             let apiResponse=   responseFormat.generate(true, "Failed to fetch blog details, Please check your internet connection", 500, null)
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
-           else {
-              let apiResponse= responseFormat.generate(false, "View count is incremented successfully",200 , result)
-               res.status(200).send(apiResponse);
+        else {
+            result.views += 1; 
+            result.save(function (error, result) { 
+                if (error) {
+                    let apiResponse = responseFormat.generate(True, "Response not found, check your internet connection", 500, error)
+           
+                    res.status(500).send(apiResponse);
+                   
+                }
+                else if (result == '' || result == undefined || result == null) {
+                    let apiResponse = responseFormat.generate(true, "Blog not found", 404, result)
+           
+                    res.status(404).send(apiResponse);
+         
+                }
+                else { 
+                    let apiResponse= responseFormat.generate(false, "View count is incremented successfully",200 , result)
+           
+                    res.status(200).send(apiResponse);
+                }
+                
+            })
+            
            }
     })
 }
@@ -166,7 +188,7 @@ let editBlog = (req, res) => {
               console.log(apiResponse)
                res.send(apiResponse)
            }
-           else if (result == undefined || result == null || result == '') {
+           else if (responseFormat.checkRespone(result)) {
                let apiResponse=     responseFormat.generate(true, "No blog found",404 , result)
                res.send(apiResponse);
            }
