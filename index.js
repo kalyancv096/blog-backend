@@ -4,7 +4,8 @@ const fs=require('fs');
 const appConfig = require('./config/appConfig');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
-const routeValidator= require('./middlewares/routeValidation')
+const routeValidator = require('./middlewares/routeValidation')
+const authenticator=require('./middlewares/routeValidation')
 require('./models/Blog');
 let app = express();
 app.use(bodyparser.json())

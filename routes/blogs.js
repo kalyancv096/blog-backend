@@ -1,9 +1,10 @@
 const express = require('express');
-const appConfig= require('../config/appConfig')
+const appConfig = require('../config/appConfig')
+const moment= require('moment')
 const blogController =require('./../controllers/blogController');
-
+const auth=require('../middlewares/auth')
 let blogs = (app) => {
-    app.get(appConfig.apiVersion + '/all', blogController.getAllBlogs)
+    app.get(appConfig.apiVersion + '/all',auth.isAuthenticated, blogController.getAllBlogs)
     /**
  * @api {get} /all Retrieve all blogs
  * @apiName get all blogs
@@ -34,7 +35,7 @@ let blogs = (app) => {
         },]
     }
  */
-    app.post(appConfig.apiVersion + '/create', blogController.createBlog)
+    app.post(appConfig.apiVersion + '/create', auth.isAuthenticated,blogController.createBlog)
  /**
  * @api {POST} /create blog
  * @apiName Create a blogs
@@ -76,7 +77,7 @@ let blogs = (app) => {
 
 
 
-    app.get(appConfig.apiVersion+'/view/:blogId',blogController.getBlogById)
+    app.get(appConfig.apiVersion+'/view/:blogId',auth.isAuthenticated,blogController.getBlogById)
      /**
  * @api {get} /view/:blogId Retrieve blog by ID
  * @apiName get blog by ID
@@ -110,7 +111,7 @@ let blogs = (app) => {
    
    
    
-    app.get(appConfig.apiVersion + '/view/by/author/:author', blogController.getBlogByAuthor)
+    app.get(appConfig.apiVersion + '/view/by/author/:author',auth.isAuthenticated, blogController.getBlogByAuthor)
        /**
  * @api {get} /view/by/author/:author Retrieve blogs by author
  * @apiName get blog by Author
@@ -147,7 +148,7 @@ let blogs = (app) => {
    
    
    
-    app.get(appConfig.apiVersion + '/view/by/category/:category', blogController.getBlogByCategory)
+    app.get(appConfig.apiVersion + '/view/by/category/:category',auth.isAuthenticated, blogController.getBlogByCategory)
         /**
  * @api {get} /view/by/category/:category Retrieve blogs by category
  * @apiName get blog by category
@@ -204,7 +205,7 @@ let blogs = (app) => {
   
   
   
-    app.post(appConfig.apiVersion + '/:blogId/delete', blogController.deleteBlog)
+    app.post(appConfig.apiVersion + '/:blogId/delete',auth.isAuthenticated, blogController.deleteBlog)
     /**
  * @api {POST} /:blogId/delete blog
  * @apiName delete a blog
@@ -227,7 +228,7 @@ let blogs = (app) => {
 
     
     
-    app.post(appConfig.apiVersion + '/:blogId/count/view', blogController.increaseViewCount)
+    app.post(appConfig.apiVersion + '/:blogId/count/view',auth.isAuthenticated, blogController.increaseViewCount)
      /**
  * @api {POST} /:blogId/count/view
  * @apiName Count view of a blog
@@ -263,7 +264,7 @@ let blogs = (app) => {
 
   
 
-    app.post(appConfig.apiVersion + '/:blogId/edit', blogController.editBlog)
+    app.post(appConfig.apiVersion + '/:blogId/edit',auth.isAuthenticated, blogController.editBlog)
         /**
  * @api {POST} /:blogId/edit
  * @apiName edit a blog
